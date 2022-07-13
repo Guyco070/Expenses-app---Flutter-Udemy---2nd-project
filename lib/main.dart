@@ -16,20 +16,20 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.amber,
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
-              labelSmall: TextStyle(color: Colors.white),
-              titleMedium: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-              titleSmall: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal),
-              titleLarge: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 25,
-                  fontWeight: FontWeight.normal),
-            ),
+                labelSmall: TextStyle(color: Colors.white),
+                titleMedium: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+                titleSmall: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal),
+                titleLarge: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 25,
+                    fontWeight: FontWeight.normal),
+              ),
           appBarTheme: AppBarTheme(
               titleTextStyle: const TextStyle(
                   fontFamily: 'OpenSans',
@@ -53,18 +53,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransaction = [
-    Transaction(
-        id: 't1', title: 'New Shoes', amount: 69.99, date: DateTime.now()),
-    Transaction(
-        id: 't2',
-        title: 'Weekly Groceries',
-        amount: 16.99,
-        date: DateTime.now()),
-  ];
+  final List<Transaction> _userTransaction = [];
 
   List<Transaction> get _recentTransactions {
-    return _userTransaction.where((tx) => tx.date.isAfter(DateTime.now().subtract(Duration(days: 7)))).toList();
+    return _userTransaction
+        .where(
+            (tx) => tx.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
+        .toList();
+  }
+
+  void _startAddNewTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) {
+          return NewTransaction(_addNewTransaction);
+        });
   }
 
   void _addNewTransaction(String title, double amount, DateTime date) {
@@ -79,12 +82,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _startAddNewTransaction(BuildContext ctx) {
-    showModalBottomSheet(
-        context: ctx,
-        builder: (_) {
-          return NewTransaction(_addNewTransaction);
-        });
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransaction.removeWhere((tx) => tx.id == id);
+    });
   }
 
   @override
@@ -103,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Container(width: double.infinity, child: Chart(_userTransaction)),
-            TransactionList(_recentTransactions),
+            TransactionList(_recentTransactions, _deleteTransaction),
           ],
         ),
       ),

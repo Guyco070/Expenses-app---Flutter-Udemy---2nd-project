@@ -4,13 +4,14 @@ import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final Function deleteTransaction;
 
-  TransactionList(this.transactions);
+  TransactionList(this.transactions, this.deleteTransaction);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 300,
+        height: 450,
         child: transactions.isEmpty
             ? Column(
                 children: [
@@ -37,24 +38,28 @@ class TransactionList extends StatelessWidget {
                       horizontal: 5,
                     ),
                     child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        child: Padding(
-                          padding: EdgeInsets.all(6),
-                          child: FittedBox(
-                            child: Text('\$${transactions[index].amount}'),
+                        leading: CircleAvatar(
+                          radius: 30,
+                          child: Padding(
+                            padding: EdgeInsets.all(6),
+                            child: FittedBox(
+                              child: Text('\$${transactions[index].amount}'),
+                            ),
                           ),
                         ),
-                      ),
-                      title: Text(
-                                transactions[index].title,
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                      subtitle: Text(
-                                  DateFormat('dd/MM/yyyy').format(transactions[index].date),
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                    ),
+                        title: Text(
+                          transactions[index].title,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        subtitle: Text(
+                          DateFormat('dd/MM/yyyy')
+                              .format(transactions[index].date),
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        trailing: IconButton(
+                            onPressed: () => deleteTransaction(transactions[index].id),
+                            icon: Icon(Icons.delete),
+                            color: Theme.of(context).errorColor)),
                   );
                   // Card(
                   //         child: Row(
