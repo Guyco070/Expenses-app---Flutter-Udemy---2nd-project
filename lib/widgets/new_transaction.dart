@@ -44,51 +44,62 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          TextField(
-            textCapitalization: TextCapitalization.words,
-            decoration: InputDecoration(labelText: 'Title'),
-            controller: _titleController,
-            onSubmitted: (_) => _submitData(),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+            left: 10,
+            right: 10,
           ),
-          TextField(
-            textCapitalization: TextCapitalization.words,
-            decoration: InputDecoration(labelText: 'Amount'),
-            keyboardType: TextInputType.number,
-            controller: _amountController,
-            onSubmitted: (_) => _submitData(),
-          ),
-          Container(
-            height: 70,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    _selectedDate == null ? 'No Date Chosen!' : 'Picked Date: ${DateFormat('dd/MM/yyyy').format(_selectedDate)}'
+          child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            TextField(
+              textCapitalization: TextCapitalization.words,
+              decoration: InputDecoration(labelText: 'Title'),
+              controller: _titleController,
+              onSubmitted: (_) => _submitData(),
+            ),
+            TextField(
+              textCapitalization: TextCapitalization.words,
+              decoration: InputDecoration(labelText: 'Amount'),
+              keyboardType: TextInputType.number,
+              controller: _amountController,
+              onSubmitted: (_) => _submitData(),
+            ),
+            Container(
+              height: 70,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Text(
+                          _selectedDate == null ? 'No Date Chosen!' : 'Picked Date: ${DateFormat('dd/MM/yyyy').format(_selectedDate)}'
+                          ),
+                      ],
                     )
-                  ),
-                FlatButton(
-                  onPressed: _presentDatePicker,
-                  child: Text('Choose Date',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  textColor: Theme.of(context).primaryColor,
-                )
-              ],
+                    ),
+                  FlatButton(
+                    onPressed: _presentDatePicker,
+                    child: Text('Choose Date',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    textColor: Theme.of(context).primaryColor,
+                  )
+                ],
+              ),
             ),
-          ),
-          RaisedButton(
-            onPressed: _submitData,
-            child: Text(
-              'Add Transaction',
-            ),
-            textColor: Theme.of(context).textTheme.labelSmall.color,
-            color: Theme.of(context).primaryColor,
-          )
-        ]),
+            RaisedButton(
+              onPressed: _submitData,
+              child: Text(
+                'Add Transaction',
+              ),
+              textColor: Theme.of(context).textTheme.labelSmall.color,
+              color: Theme.of(context).primaryColor,
+            )
+          ]),
+        ),
       ),
     );
   }
