@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:expenses_app/widgets/adaptive_flat_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -81,12 +85,7 @@ class _NewTransactionState extends State<NewTransaction> {
                       ],
                     )
                     ),
-                  FlatButton(
-                    onPressed: _presentDatePicker,
-                    child: Text('Choose Date',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    textColor: Theme.of(context).primaryColor,
-                  )
+                  AdaptiveFlatButton('Choose Date', _presentDatePicker)
                 ],
               ),
             ),
