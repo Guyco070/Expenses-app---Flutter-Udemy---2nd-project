@@ -29,22 +29,22 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.amber,
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
-                labelSmall: TextStyle(color: Colors.white),
-                titleMedium: TextStyle(
+                labelSmall: const TextStyle(color: Colors.white),
+                titleMedium: const TextStyle(
                     fontFamily: 'OpenSans',
                     fontSize: 18,
                     fontWeight: FontWeight.bold),
-                titleSmall: TextStyle(
+                titleSmall: const TextStyle(
                     fontFamily: 'OpenSans',
                     fontSize: 14,
                     fontWeight: FontWeight.normal),
-                titleLarge: TextStyle(
+                titleLarge: const TextStyle(
                     fontFamily: 'OpenSans',
                     fontSize: 25,
                     fontWeight: FontWeight.normal),
               ),
-          appBarTheme: AppBarTheme(
-              titleTextStyle: const TextStyle(
+          appBarTheme: const AppBarTheme(
+              titleTextStyle: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold)
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Transaction> get _recentTransactions {
     return _userTransaction
         .where(
-            (tx) => tx.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
+            (tx) => tx.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
         .toList();
   }
 
@@ -114,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               GestureDetector(
                 onTap: () => _startAddNewTransaction(context),
-                child: Icon(CupertinoIcons.add))
+                child: const Icon(CupertinoIcons.add))
             ],
           ),
         )
@@ -123,22 +123,22 @@ class _MyHomePageState extends State<MyHomePage> {
             actions: [
               IconButton(
                   onPressed: () => _startAddNewTransaction(context),
-                  icon: Icon(Icons.add))
+                  icon: const Icon(Icons.add))
             ],
           );
 
     final mediaQuery = MediaQuery.of(context);
-    final curScaleFactor = mediaQuery.textScaleFactor;
+    // final curScaleFactor = mediaQuery.textScaleFactor;
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
-    final _txListWidget = Container(
+    final txListWidget = SizedBox(
         height: (mediaQuery.size.height -
                 appBar.preferredSize.height -
                 mediaQuery.padding.top) *
             0.7,
         child: TransactionList(_recentTransactions, _deleteTransaction));
 
-    final _txChart = Container(
+    final txChart = SizedBox(
         height: (mediaQuery.size.height -
                 appBar.preferredSize.height -
                 mediaQuery.padding.top) *
@@ -167,11 +167,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       })
                 ],
               ),
-            if (isLandscape) _showChart ? _txChart : _txListWidget,
+            if (isLandscape) _showChart ? txChart : txListWidget,
 
             if (!isLandscape) ...[
-              _txChart,
-              _txListWidget,
+              txChart,
+              txListWidget,
             ]
           ],
         ),
@@ -180,8 +180,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return isIOS
         ? CupertinoPageScaffold(
-            child: pageBody,
             navigationBar: appBar,
+            child: pageBody,
           )
         : Scaffold(
             appBar: appBar,
@@ -192,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ? Container()
                 : FloatingActionButton(
                     onPressed: () => _startAddNewTransaction(context),
-                    child: Icon(Icons.add)),
+                    child: const Icon(Icons.add)),
           );
   }
 }

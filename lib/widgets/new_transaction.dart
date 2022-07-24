@@ -1,14 +1,11 @@
-import 'dart:io';
-
 import 'package:expenses_app/widgets/adaptive_flat_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function _addHandler;
 
-  NewTransaction(this._addHandler);
+  const NewTransaction(this._addHandler);
 
   @override
   State<NewTransaction> createState() => _NewTransactionState();
@@ -61,18 +58,18 @@ class _NewTransactionState extends State<NewTransaction> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
             TextField(
               textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(labelText: 'Title'),
+              decoration: const InputDecoration(labelText: 'Title'),
               controller: _titleController,
               onSubmitted: (_) => _submitData(),
             ),
             TextField(
               textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(labelText: 'Amount'),
+              decoration: const InputDecoration(labelText: 'Amount'),
               keyboardType: TextInputType.number,
               controller: _amountController,
               onSubmitted: (_) => _submitData(),
             ),
-            Container(
+            SizedBox(
               height: 70,
               child: Row(
                 children: [
@@ -91,11 +88,9 @@ class _NewTransactionState extends State<NewTransaction> {
             ),
             RaisedButton(
               onPressed: _submitData,
-              child: Text(
-                'Add Transaction',
-              ),
               textColor: Theme.of(context).textTheme.labelSmall.color,
               color: Theme.of(context).primaryColor,
+              child: const Text('Add Transaction'),
             )
           ]),
         ),
