@@ -65,15 +65,15 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final List<Transaction> _userTransaction = [];
 
   bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
     return _userTransaction
-        .where(
-            (tx) => tx.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
+        .where((tx) =>
+            tx.date.isAfter(DateTime.now().subtract(const Duration(days: 7))))
         .toList();
   }
 
@@ -103,29 +103,54 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Widget _buildAppBar() {
+    return AppBar(
+      title: const Text('Personal Expenses'),
+      actions: [
+        IconButton(
+            onPressed: () => _startAddNewTransaction(context),
+            icon: const Icon(Icons.add))
+      ],
+    );
+  }
+
+  Widget _buildCupertinoNavigationBar() {
+    return CupertinoNavigationBar(
+      middle: const Text('Personal Expenses'),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+              onTap: () => _startAddNewTransaction(context),
+              child: const Icon(CupertinoIcons.add))
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isIOS = Platform.isIOS;
-    final PreferredSizeWidget appBar = isIOS
-        ? CupertinoNavigationBar(
-          middle: const Text('Personal Expenses'),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: () => _startAddNewTransaction(context),
-                child: const Icon(CupertinoIcons.add))
-            ],
-          ),
-        )
-        : AppBar(
-            title: const Text('Personal Expenses'),
-            actions: [
-              IconButton(
-                  onPressed: () => _startAddNewTransaction(context),
-                  icon: const Icon(Icons.add))
-            ],
-          );
+    final PreferredSizeWidget appBar =
+        isIOS ? _buildCupertinoNavigationBar() : _buildAppBar();
 
     final mediaQuery = MediaQuery.of(context);
     // final curScaleFactor = mediaQuery.textScaleFactor;
@@ -146,37 +171,40 @@ class _MyHomePageState extends State<MyHomePage> {
         width: double.infinity,
         child: Chart(_userTransaction));
 
-    final pageBody = SafeArea(child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            // Text("data", style: TextStyle(fontSize: 20 * curScaleFactor),), // Using user phone settings to change text size.
-            if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Show Chart', style: Theme.of(context).textTheme.bodyMedium,),
-                  Switch.adaptive(
-                      activeColor: Theme.of(context).accentColor,
-                      value: _showChart,
-                      onChanged: (isOn) {
-                        setState(() {
-                          _showChart = isOn;
-                        });
-                      })
-                ],
-              ),
-            if (isLandscape) _showChart ? txChart : txListWidget,
+    final pageBody = SafeArea(
+        child: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          // Text("data", style: TextStyle(fontSize: 20 * curScaleFactor),), // Using user phone settings to change text size.
+          if (isLandscape)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Show Chart',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                Switch.adaptive(
+                    activeColor: Theme.of(context).accentColor,
+                    value: _showChart,
+                    onChanged: (isOn) {
+                      setState(() {
+                        _showChart = isOn;
+                      });
+                    })
+              ],
+            ),
+          if (isLandscape) _showChart ? txChart : txListWidget,
 
-            if (!isLandscape) ...[
-              txChart,
-              txListWidget,
-            ]
-          ],
-        ),
-      )
-    );
+          if (!isLandscape) ...[
+            txChart,
+            txListWidget,
+          ]
+        ],
+      ),
+    ));
 
     return isIOS
         ? CupertinoPageScaffold(
